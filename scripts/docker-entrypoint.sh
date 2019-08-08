@@ -80,14 +80,14 @@ install_languages() {
         pkg="tesseract-ocr-data-$lang"
 
         # English is installed by default
-        if [[ "$lang" ==  "eng" ]]; then
+        if [ "$lang" ==  "eng" ]; then
             continue
         fi
 
         if apk info -e "$pkg" > /dev/null 2>&1; then
             continue
         fi
-        if ! apk --no-cache info "$pkg" > /dev/null 2>&1; then
+        if ! apk info "$pkg" > /dev/null 2>&1; then
             continue
         fi
 
@@ -100,11 +100,18 @@ if [[ "$1" != "/"* ]]; then
     initialize
 
     # Install additional languages if specified
-    if [[ ! -z "$PAPERLESS_OCR_LANGUAGES"  ]]; then
+    if [ ! -z "$PAPERLESS_OCR_LANGUAGES"  ]; then
         install_languages "$PAPERLESS_OCR_LANGUAGES"
     fi
 
-    exec sudo -HEu paperless "/usr/src/paperless/src/manage.py" "$@"
+    if [[ "$1" = "gunicorn" ]]; then
+        #gunicorn_cmd_args="${supplied_args:---bind=0.0.0.0:8000 --workers=4 --threads=2 --access-logfile=- --log-file=-}"
+
+        cd /usr/src/paperless/src/ && \
+            exec sudo -HEu paperless /usr/bin/gunicorn -c gunicorn.conf paperless.wsgi
+    else
+        exec sudo -HEu paperless "/usr/src/paperless/src/manage.py" "$@"
+    fi
 fi
 
 exec "$@"
