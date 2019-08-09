@@ -108,7 +108,7 @@ if [[ "$1" != "/"* ]]; then
         #gunicorn_cmd_args="${supplied_args:---bind=0.0.0.0:8000 --workers=4 --threads=2 --access-logfile=- --log-file=-}"
 
         cd /usr/src/paperless/src/ && \
-            exec sudo -HEu paperless /usr/bin/gunicorn -c gunicorn.conf paperless.wsgi
+            exec sudo -HEu paperless /usr/bin/gunicorn -c /usr/src/paperless/gunicorn.conf paperless.wsgi
     else
         exec sudo -HEu paperless "/usr/src/paperless/src/manage.py" "$@"
     fi
