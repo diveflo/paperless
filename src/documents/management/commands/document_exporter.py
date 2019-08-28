@@ -74,7 +74,9 @@ class Command(Renderable, BaseCommand):
 
             document_dict[EXPORTER_FILE_NAME] = document.file_name
             document_dict[EXPORTER_THUMBNAIL_NAME] = thumbnail_name
-            document_dict[EXPORTER_THUMBNAIL_WEBP_NAME] = thumbnail_webp_name
+
+            if os.path.exists(thumbnail_webp_target):
+                document_dict[EXPORTER_THUMBNAIL_WEBP_NAME] = thumbnail_webp_name
 
             print("Exporting: {}".format(file_target))
 
@@ -89,15 +91,18 @@ class Command(Renderable, BaseCommand):
                     f.write(GnuPG.decrypted(document.thumbnail_file))
                     os.utime(thumbnail_target, times=(t, t))
 
-                with open(thumbnail_webp_target, "wb") as f:
-                    f.write(GnuPG.decrypted(document.thumbnail_file_webp))
-                    os.utime(thumbnail_webp_target, times=(t, t))
+                if os.path.exists(document.thumbnail_path_webp):
+                    with open(thumbnail_webp_target, "wb") as f:
+                        f.write(GnuPG.decrypted(document.thumbnail_file_webp))
+                        os.utime(thumbnail_webp_target, times=(t, t))
 
             else:
 
                 shutil.copy(document.source_path, file_target)
                 shutil.copy(document.thumbnail_path, thumbnail_target)
-                shutil.copy(document.thumbnail_path_webp, thumbnail_webp_target)
+
+                if os.path.exists(document.thumbnail_path_webp):
+                    shutil.copy(document.thumbnail_path_webp, thumbnail_webp_target)
 
         manifest += json.loads(
             serializers.serialize("json", Correspondent.objects.all()))
