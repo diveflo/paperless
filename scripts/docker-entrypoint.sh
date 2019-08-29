@@ -75,14 +75,14 @@ install_languages() {
         pkg="tesseract-ocr-data-$lang"
 
         # English is installed by default
-        if [ "$lang" ==  "eng" ]; then
+        if [[ "$lang" ==  "eng" ]]; then
             continue
         fi
 
         if apk info -e "$pkg" > /dev/null 2>&1; then
             continue
         fi
-        if ! apk info "$pkg" > /dev/null 2>&1; then
+        if ! apk --no-cache info "$pkg" > /dev/null 2>&1; then
             continue
         fi
 
@@ -95,7 +95,7 @@ if [[ "$1" != "/"* ]]; then
     initialize
 
     # Install additional languages if specified
-    if [ ! -z "$PAPERLESS_OCR_LANGUAGES"  ]; then
+    if [[ ! -z "$PAPERLESS_OCR_LANGUAGES"  ]]; then
         install_languages "$PAPERLESS_OCR_LANGUAGES"
     fi
 
