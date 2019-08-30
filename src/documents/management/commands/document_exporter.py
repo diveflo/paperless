@@ -10,8 +10,8 @@ from documents.models import Document, Correspondent, Tag
 from paperless.db import GnuPG
 
 from ...mixins import Renderable
-from documents.settings import (EXPORTER_FILE_NAME, 
-                                EXPORTER_THUMBNAIL_NAME, 
+from documents.settings import (EXPORTER_FILE_NAME,
+                                EXPORTER_THUMBNAIL_NAME,
                                 EXPORTER_THUMBNAIL_WEBP_NAME)
 
 
@@ -74,12 +74,12 @@ class Command(Renderable, BaseCommand):
             document_dict[EXPORTER_FILE_NAME] = document.file_name
             document_dict[EXPORTER_THUMBNAIL_NAME] = thumbnail_name
 
-            thumbnail_name = document.file_name + "-thumbnail.webp"
-            thumbnail_target = os.path.join(self.target, 
-                                                 thumbnail_name)
+            thumbnail_webp_name = document.file_name + "-thumbnail.webp"
+            thumbnail_webp_target = os.path.join(self.target,
+                                                 thumbnail_webp_name)
 
-            if os.path.exists(thumbnail_target):
-                document_dict[EXPORTER_THUMBNAIL_WEBP_NAME] = thumbnail_name
+            if os.path.exists(thumbnail_webp_target):
+                document_dict[EXPORTER_THUMBNAIL_WEBP_NAME] = thumbnail_webp_name # NOQA: E501
 
             print("Exporting: {}".format(file_target))
 
@@ -105,7 +105,8 @@ class Command(Renderable, BaseCommand):
                 shutil.copy(document.thumbnail_path, thumbnail_target)
 
                 if os.path.exists(document.thumbnail_webp_path):
-                    shutil.copy(document.thumbnail_webp_path, thumbnail_webp_target)
+                    shutil.copy(document.thumbnail_webp_path,
+                                thumbnail_webp_target)
 
         manifest += json.loads(
             serializers.serialize("json", Correspondent.objects.all()))

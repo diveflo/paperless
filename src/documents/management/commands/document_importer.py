@@ -11,8 +11,8 @@ from paperless.db import GnuPG
 
 from ...mixins import Renderable
 
-from documents.settings import (EXPORTER_FILE_NAME, 
-                                EXPORTER_THUMBNAIL_NAME, 
+from documents.settings import (EXPORTER_FILE_NAME,
+                                EXPORTER_THUMBNAIL_NAME,
                                 EXPORTER_THUMBNAIL_WEBP_NAME)
 
 
@@ -98,11 +98,11 @@ class Command(Renderable, BaseCommand):
             thumbnail_path = os.path.join(self.source, thumb_file)
 
             if thumb_webp_file:
-                thumbnail_webp_path = os.path.join(self.source, 
+                thumbnail_webp_path = os.path.join(self.source,
                                                    thumb_webp_file)
 
             if settings.PASSPHRASE:
-                _write_encrypted_to_document(document_path, 
+                _write_encrypted_to_document(document_path,
                                              document.source_path)
 
                 _write_encrypted_to_document(thumbnail_path,
@@ -116,11 +116,10 @@ class Command(Renderable, BaseCommand):
                 shutil.copy(thumbnail_path, document.thumbnail_path)
 
                 if os.path.exists(thumbnail_webp_path):
-                    shutil.copy(thumbnail_webp_path, 
+                    shutil.copy(thumbnail_webp_path,
                                 document.thumbnail_path_webp)
 
         # Reset the storage type to whatever we've used while importing
-
         storage_type = Document.STORAGE_TYPE_UNENCRYPTED
         if settings.PASSPHRASE:
             storage_type = Document.STORAGE_TYPE_GPG
