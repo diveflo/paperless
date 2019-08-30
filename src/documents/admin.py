@@ -292,7 +292,8 @@ class DocumentAdmin(DjangoQLSearchMixin, CommonAdmin):
 
         html_thumbwebp_srcset = self._html_tag(
             "source",
-            srcset=reverse("fetch", kwargs={"kind": "thumbwebp", "pk": obj.pk}),
+            srcset=reverse("fetch", kwargs={"kind": "thumbwebp",
+                                            "pk": obj.pk}),
             type="image/webp",
             width=180,
             alt="Thumbnail of {}".format(obj.file_name),
@@ -308,7 +309,10 @@ class DocumentAdmin(DjangoQLSearchMixin, CommonAdmin):
             title=obj.file_name
             )
 
-        return '<a href="%s"><picture>%s%s%s</picture></a>' % (obj.download_url, html_thumbwebp_srcset, html_thumb_srcset, html_thumb_imgsrc)
+        return '<a href="%s"><picture>%s%s%s</picture></a>' % (obj.download_url,
+                                                               html_thumbwebp_srcset,
+                                                               html_thumb_srcset,
+                                                               html_thumb_imgsrc) # NOQA: E501
 
     @mark_safe
     def tags_(self, obj):
